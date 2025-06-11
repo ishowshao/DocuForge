@@ -6,7 +6,8 @@
       "Bash(python:*)",
       "Bash(mkdir:*)",
       "Bash(rg:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(pytest:*)"
     ],
     "deny": []
   }
