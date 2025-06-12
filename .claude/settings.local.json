@@ -9,7 +9,7 @@
       "Bash(grep:*)",
       "Bash(pytest:*)",
       "Bash(rm:*)",
-      "Bash(git:*)"
+      "Bash(git commit:*)"
     ],
     "deny": []
   }
