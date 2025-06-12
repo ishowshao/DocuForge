@@ -1,6 +1,7 @@
 {
   "permissions": {
     "allow": [
+      "Bash(python:*)",
       "Bash(find:*)",
       "Bash(pip:*)",
       "Bash(mkdir:*)",
