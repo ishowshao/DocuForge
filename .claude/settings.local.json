@@ -1,15 +1,6 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find:*)",
-      "Bash(pip:*)",
-      "Bash(python:*)",
-      "Bash(mkdir:*)",
-      "Bash(rg:*)",
-      "Bash(grep:*)",
-      "Bash(pytest:*)",
-      "Bash(rm:*)",
-      "Bash(git:*)"
     ],
     "deny": []
   }
