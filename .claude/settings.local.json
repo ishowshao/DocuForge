@@ -8,10 +8,8 @@
       "Bash(rg:*)",
       "Bash(grep:*)",
       "Bash(pytest:*)",
-      "Bash(grep -n \"self\\.llm\\.invoke\" src/docuforge/components.py)",
-      "Bash(python -c \"from src.docuforge.components import ComponentBase; print('Import successful')\")",
-      "Bash(rm test_retry.py)",
-      "Bash(git add .)"
+      "Bash(rm:*)",
+      "Bash(git:*)"
     ],
     "deny": []
   }
