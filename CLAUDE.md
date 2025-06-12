@@ -73,7 +73,7 @@ class DocumentSection:
 - **LangGraph 0.4.8** - Stateful agent workflows with conditional edges
 - **LangSmith 0.3.45** - Debugging and observability
 - **Pydantic 2.11.5** - Data validation and structured outputs
-- **Azure OpenAI** - GPT-4/O3 integration with reasoning_effort="high"
+- **Azure OpenAI** - GPT-4 integration
 
 ## Environment Configuration
 

@@ -230,8 +230,7 @@ class TestSetupLLM:
         mock_azure_openai.assert_called_once_with(
             azure_endpoint="https://test.openai.azure.com/",
             azure_deployment="test-deployment",
-            openai_api_version="2023-12-01-preview",
-            reasoning_effort="high"
+            openai_api_version="2023-12-01-preview"
         )
     
     @patch('docuforge.cli.load_dotenv')

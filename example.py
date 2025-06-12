@@ -9,8 +9,7 @@ dotenv.load_dotenv()
 llm = AzureChatOpenAI(
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
     azure_deployment=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
-    openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
-    reasoning_effort="high"
+    openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION")
 )
 
 # Pydantic
