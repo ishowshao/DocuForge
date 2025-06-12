@@ -1,5 +1,6 @@
 """Core components for the DocuForge rewrite engine."""
 
+import time
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional
 
@@ -7,6 +8,7 @@ from langchain_core.language_models import BaseLLM
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field
+from requests.exceptions import ConnectionError, Timeout, RequestException
 
 from .callbacks import DefaultCallbackHandler, ProgressCallbackHandler
 from .models import (
@@ -30,6 +32,54 @@ class ComponentBase(ABC):
         self.llm = llm
         self.callback_handler = callback_handler or DefaultCallbackHandler()
         self.prompt_manager = prompt_manager or PromptManager()
+    
+    def _invoke_llm_with_retry(self, messages: List, max_retries: int = 3, base_delay: float = 1.0):
+        """Invoke LLM with retry mechanism for handling connection errors.
+        
+        Args:
+            messages: Messages to send to LLM
+            max_retries: Maximum number of retry attempts
+            base_delay: Base delay between retries (exponential backoff)
+            
+        Returns:
+            LLM response
+            
+        Raises:
+            Exception: If all retries are exhausted
+        """
+        last_exception = None
+        
+        for attempt in range(max_retries + 1):
+            try:
+                response = self.llm.invoke(messages)
+                return response
+            except (ConnectionError, Timeout, RequestException) as e:
+                last_exception = e
+                if attempt < max_retries:
+                    delay = base_delay * (2 ** attempt)  # Exponential backoff
+                    error_type = type(e).__name__
+                    self.callback_handler.on_stage_progress(
+                        "llm_retry",
+                        f"{error_type} (attempt {attempt + 1}/{max_retries + 1}), retrying in {delay:.1f}s: {str(e)}"
+                    )
+                    time.sleep(delay)
+                else:
+                    error_type = type(e).__name__
+                    self.callback_handler.on_stage_progress(
+                        "llm_retry",
+                        f"All retry attempts exhausted. Final {error_type}: {str(e)}"
+                    )
+            except Exception as e:
+                # For non-network errors, provide detailed error info and don't retry
+                error_type = type(e).__name__
+                self.callback_handler.on_stage_progress(
+                    "llm_error",
+                    f"Non-retryable {error_type}: {str(e)}"
+                )
+                raise e
+        
+        # If we get here, all retries failed
+        raise Exception(f"LLM invocation failed after {max_retries + 1} attempts: {str(last_exception)}")
 
 
 class ContextBuilder(ComponentBase):
@@ -147,7 +197,7 @@ class OutlineGenerator(ComponentBase):
             "Calling LLM to generate outline..."
         )
         
-        response = self.llm.invoke(messages)
+        response = self._invoke_llm_with_retry(messages)
         
         try:
             outline = self.parser.parse(response.content)
@@ -250,7 +300,7 @@ class ContentFiller(ComponentBase):
             HumanMessage(content=human_prompt)
         ]
         
-        response = self.llm.invoke(messages)
+        response = self._invoke_llm_with_retry(messages)
         return response.content.strip()
 
 
@@ -335,7 +385,7 @@ class Reviser(ComponentBase):
             HumanMessage(content=human_prompt)
         ]
         
-        response = self.llm.invoke(messages)
+        response = self._invoke_llm_with_retry(messages)
         
         try:
             return self.parser.parse(response.content)
@@ -390,5 +440,5 @@ class Reviser(ComponentBase):
             HumanMessage(content=human_prompt)
         ]
         
-        response = self.llm.invoke(messages)
+        response = self._invoke_llm_with_retry(messages)
         return response.content.strip()
