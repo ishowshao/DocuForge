@@ -22,7 +22,7 @@ structured_llm = llm.with_structured_output(StringArray)
 
 messages = [
     SystemMessage("请把用户输入的句子合理的断开成2段，每段不超过10个字。不可以修改原文。最终以 JSON 字符串数组形式返回。"),
-    HumanMessage("芙芙是一款以初音未来为原型的毛绒玩偶。"),
+    HumanMessage("人工智能，指由人制造出来的机器所表现出来的智能。"),
 ]
 
 response = structured_llm.invoke(messages)
