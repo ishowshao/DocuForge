@@ -13,7 +13,7 @@
 ## 安装
 
 ```bash
-pip install -r requirements.txt
+pip install docuforge
 ```
 
 ## 环境配置
@@ -123,4 +123,4 @@ python example.py
 
 ## 许可证
 
-[在此添加你的许可证信息]
+MIT License - 详见 [LICENSE](LICENSE) 文件。
