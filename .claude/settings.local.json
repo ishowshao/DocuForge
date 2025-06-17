@@ -9,7 +9,8 @@
       "Bash(grep:*)",
       "Bash(pytest:*)",
       "Bash(rm:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(ssh-keygen:*)"
     ],
     "deny": []
   }
